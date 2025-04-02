@@ -23,4 +23,4 @@ ENV FLASK_ENV=production
 
 EXPOSE 5000
 
-CMD ["/app/.venv/bin/gunicorn", "-w", "$(nproc)", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["/app/.venv/bin/gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app"]

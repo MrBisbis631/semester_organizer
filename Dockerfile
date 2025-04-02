@@ -14,7 +14,12 @@ RUN python -m venv .venv && \
     .venv/bin/pip install --no-cache-dir -r requirements.txt \
     && .venv/bin/pip install gunicorn
 
+FROM python:3.13-slim
+
+WORKDIR /app
+
 COPY . /app
+COPY --from=builder /app/.venv /app/.venv
 
 # Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"

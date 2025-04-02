@@ -24,8 +24,6 @@ RUN python -m venv .venv && \
 # Final stage - Minimal alpine image
 FROM python:3.13-alpine
 
-WORKDIR /app
-
 # Copy only the application code
 COPY app.py /app/
 

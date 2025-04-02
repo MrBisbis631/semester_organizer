@@ -1,0 +1,12 @@
+/.DS_Store
+/.env
+/.env.local
+/.git
+/.gitattributes
+/.gitignore
+/.github
+/.idea
+/.vscode
+/tests
+readme_date
+*.log

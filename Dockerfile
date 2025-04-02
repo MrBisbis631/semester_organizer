@@ -2,16 +2,20 @@ FROM python:3.13-slim as builder
 
 WORKDIR /app
 
+# Install required system dependencies
+RUN apt-get update && apt-get install -y \
+    python3-venv \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
-# install dependencies in a virtual environment
+# Create a virtual environment and install dependencies
 COPY requirements.txt /app/
 RUN python -m venv .venv && \
     .venv/bin/pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-# spin up the Flask app
-
+# Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production

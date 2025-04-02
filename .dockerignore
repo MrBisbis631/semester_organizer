@@ -10,3 +10,12 @@
 /tests
 readme_date
 *.log
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv
+venv
+*.log

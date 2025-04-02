@@ -3,6 +3,13 @@ FROM python:3.13-slim-bullseye AS builder
 
 WORKDIR /app
 
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set environment variables for build efficiency
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -11,8 +18,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 # Install dependencies only
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt gunicorn && \
-    pip install --no-cache-dir wheel
+RUN pip install --upgrade pip setuptools wheel && \
+    # Try to install constraint package separately
+    pip install --no-cache-dir python-constraint && \
+    # Install remaining requirements
+    grep -v "python-constraint2" requirements.txt > requirements_filtered.txt || true && \
+    pip install --no-cache-dir -r requirements_filtered.txt gunicorn
 
 # STAGE 2: Runtime image
 FROM python:3.13-slim-bullseye
@@ -29,7 +40,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=builder /usr/local/bin/gunicorn /usr/local/bin/gunicorn
 
-# Copy all application code - .gitignore will handle exclusions
+# Copy all application code
 COPY . .
 
 # Create a non-root user and set ownership

@@ -12,7 +12,7 @@ RUN python -m venv /app/.venv
 
 # Copy dependencies file and install dependencies
 COPY requirements.txt .
-RUN . /app/.venv/bin/activate && pip install --no-cache-dir -r requirements.txt
+RUN /app/.venv/bin/pip install --no-cache-dir -r requirements.txt
 
 # Final lightweight image
 FROM python:3.13-alpine
@@ -35,4 +35,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 5000
 
 # Run Gunicorn with optimal settings
-CMD [".venv/bin/gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["/app/.venv/bin/gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app"]

@@ -26,6 +26,10 @@ ENV PATH="/app/.venv/bin:$PATH"
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
+# Create a non-root user and switch to it
+RUN useradd -m appuser
+USER appuser
+
 EXPOSE 5000
 
 CMD ["/app/.venv/bin/gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app"]

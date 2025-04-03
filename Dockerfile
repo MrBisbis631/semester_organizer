@@ -1,11 +1,12 @@
-# Use a lightweight Python base image
-FROM python:3.13-alpine as builder
+# Use a slim Python base image for building
+FROM python:3.13-slim as builder
 
 # Set the working directory
 WORKDIR /app
 
 # Install necessary system dependencies
-RUN apk add --no-cache gcc musl-dev libffi-dev
+RUN apt-get update && apt-get install -y gcc libffi-dev libmagic build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create a virtual environment
 RUN python -m venv /app/.venv
@@ -14,8 +15,8 @@ RUN python -m venv /app/.venv
 COPY requirements.txt .
 RUN /app/.venv/bin/pip install --no-cache-dir -r requirements.txt
 
-# Final lightweight image
-FROM python:3.13-alpine
+# Final slim image
+FROM python:3.13-slim
 
 # Set the working directory
 WORKDIR /app
